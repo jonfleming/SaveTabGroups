@@ -57,7 +57,7 @@ saveButton.addEventListener('click', async () => {
     message.innerText = 'Please enter a Name'
     return
   }
-  // collapsed, color, id, title, windowId: 1
+  
   message.innerText = ''
   chrome.tabGroups.query({ windowId: window.WINDOW_ID_CURRENT }, (tabGroups) => {
     tabGroups.forEach(group => {
@@ -80,7 +80,6 @@ saveButton.addEventListener('click', async () => {
   })
 });
   
-// https://github.com/parthpower/chrome-tab-group-exporter  
 loadButton.addEventListener('click', async () => {
   if (!selected || selected === 'X') {
     message.innerText = 'Please select saved Tab Groups'
