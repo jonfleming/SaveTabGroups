@@ -1,22 +1,50 @@
 const saveButton = document.getElementById("save-button")
 const loadButton = document.getElementById("load-button")
-const select = document.getElementById("save-name")
+const table = document.getElementById("table")
 const message = document.getElementById("message")
-let tabGroupsSaves = {}
 
-const addOption = (name) => {
-  const option = document.createElement("option")
-  option.text = name
-  option.vale = name
-  select.add(option);
+let tabGroupsSaves = {}
+let selected = ''
+
+const addRow = (name) => {
+  const tr = table.insertRow(-1)
+  const td = tr.insertCell(0)
+  const icon = tr.insertCell(1)
+  const text = document.createTextNode(name)
+  td.appendChild(text)
+  icon.appendChild(document.createTextNode('X'))
+  icon.classList.add('close')
+  icon.addEventListener('click', deleteRow)
 }
+
+const deleteRow = (event) => { 
+  const node = event.target
+  const tr = node.parentNode
+  const name = node.previousSibling.innerHTML
+  table.deleteRow(tr.rowIndex)
+  delete tabGroupsSaves[name]
+  chrome.storage.sync.set({ tabGroupsSaves })
+  selected = ''
+}
+
+const clearSelections = () => {
+  const cells = document.querySelectorAll('td')
+  cells.forEach(cell => { cell.classList.remove('selected')})
+}
+
+table.addEventListener('click', (event) => {
+  const td = event.target
+  selected = td.innerHTML
+  clearSelections()
+  td.classList.add('selected')
+})
 
 chrome.storage.sync.get(["tabGroupsSaves"], (result) => {
   if (result) {
     console.log(result)
     tabGroupsSaves = result.tabGroupsSaves
     Object.keys(tabGroupsSaves).forEach(save => {
-      addOption(save)
+      addRow(save)
     })
   }
 })
@@ -46,7 +74,7 @@ saveButton.addEventListener('click', async () => {
     
     tabGroupsSaves[name] = groupList
     chrome.storage.sync.set({ tabGroupsSaves }, () => {
-      addOption(name)
+      addRow(name)
       message.innerText = `Tab Groups [${name}] Saved.`  
     });
   })
@@ -54,31 +82,33 @@ saveButton.addEventListener('click', async () => {
   
 // https://github.com/parthpower/chrome-tab-group-exporter  
 loadButton.addEventListener('click', async () => {
-  // load tab groups
-  const name = select.value
-  const tabGroups = tabGroupsSaves[name]
+  if (!selected || selected === 'X') {
+    message.innerText = 'Please select saved Tab Groups'
+    return
+  }
 
-  // close existing tabs
+  const tabGroups = tabGroupsSaves[selected]
 
-  // open tabs
-  tabGroups.forEach(tabGroup => {  
+  for (let i = 0; i < tabGroups.length; i++) {
+    const tabGroup = tabGroups[i]
     let tabIds = []
-    tabGroup.tabs.forEach(tab => {
-      // add tab
+
+    for (let j = 0; j < tabGroup.tabs.length; j++) {
+      const tab = tabGroup.tabs[j]
       const newTab = await chrome.tabs.create({
         url: tab.url,
         active: false,
       })
-      if(tab.id !== chrome.tabs.TAB_ID_NONE) {
-        tabIds.push(tab.id)
+
+      if(newTab.id !== chrome.tabs.TAB_ID_NONE) {
+        tabIds.push(newTab.id)
       }
-    })
+    }
 
-    const groupId = await chrome.tabs.group({
-      tabIds: tabIds
-    })
-
-    chrome.tabGroups.update(groupId, {title: tabGroup.title, color: tabGroup.color})
-  })
+    const groupId = await chrome.tabs.group({tabIds})
+    chrome.tabGroups.update(groupId, { title: tabGroup.title, color: tabGroup.color })
+    
+    message.innerText = 'Loaded Tab Groups [${selected}]'
+  }
 })
 

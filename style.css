@@ -8,3 +8,17 @@ button {
 #message {
   color: green
 }
+
+#table {
+  border: 1px solid black;
+  width: 300px;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: tan;
+}
+
+.close {
+  color: red;
+}
