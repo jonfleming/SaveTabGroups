@@ -8,6 +8,9 @@ chrome.storage.sync.get("tabgroups", ({ tabgroups }) => {
 saveButton.addEventListener('click', async () => {
   // get tab groups
   let tabGroups = {}
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    console.log(tabs)
+  })
 
   // for each tab group
   for (let tabGroup in tabgroups) {

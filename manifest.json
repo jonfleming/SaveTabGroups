@@ -1,6 +1,6 @@
 {
-  "name": "Jon",
-  "description": "Build an Extension!",
+  "name": "Save Tab Groups",
+  "description": "Save and Load Tab Groups",
   "version": "1.0",
   "manifest_version": 3,
   "permissions": [
