@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="button.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <h1>Color</h1>
-    This is the current color:<br/>
-    <button id="save-button">Save Tab Groups</button><br/>
+    <h1>Tab Groups</h1>
+    Saved<br/>
+    <select id="save-name">
+      <option value="-1">Select Saved Tab Groups</option>
+    </select>
     <button id="load-button">Load Tab Groups</button>
+    <hr/>
+    <label for="save-name">Name</label>
+    <input type="text" id="name">
+    <button id="save-button">Save Tab Groups</button><br/>
+    <span id="message"></span>
     <script src="popup.js"></script>
   </body>
 </html>
