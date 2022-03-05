@@ -2,11 +2,12 @@ const saveButton = document.getElementById("save-button")
 const loadButton = document.getElementById("load-button")
 const table = document.getElementById("table")
 const message = document.getElementById("message")
+const preview = document.getElementById("preview")
 
 let tabGroupsSaves = {}
 let selected = ''
 
-const addRow = (name) => {
+function addRow(name) {
   const tr = table.insertRow(-1)
   const td = tr.insertCell(0)
   const icon = tr.insertCell(1)
@@ -14,29 +15,47 @@ const addRow = (name) => {
   td.appendChild(text)
   icon.appendChild(document.createTextNode('X'))
   icon.classList.add('close')
+  icon.style.width = '1rem'
   icon.addEventListener('click', deleteRow)
 }
 
-const deleteRow = (event) => { 
+function deleteRow(event) {
   const node = event.target
   const tr = node.parentNode
   const name = node.previousSibling.innerHTML
-  table.deleteRow(tr.rowIndex)
-  delete tabGroupsSaves[name]
-  chrome.storage.sync.set({ tabGroupsSaves })
-  selected = ''
+
+  if (confirm(`Delete saved groups [${name}]`)) {
+    table.deleteRow(tr.rowIndex)
+    delete tabGroupsSaves[name]
+    chrome.storage.sync.set({ tabGroupsSaves })
+    selected = '' 
+    message.innerText = `Deleted saved groups [${name}]`
+    message.style.color = 'gray'
+  }
 }
 
-const clearSelections = () => {
+function clearSelections() {
   const cells = document.querySelectorAll('td')
   cells.forEach(cell => { cell.classList.remove('selected')})
 }
 
+function showPreview(name) {
+  const tabGroups = tabGroupsSaves[name]
+  let list = ''
+  for (let i = 0; i < tabGroups?.length; i++) {
+    list += `<li>${tabGroups[i].title}</li>`
+  }
+
+  preview.innerHTML = `<ul>${list}</ul>`
+}
+
 table.addEventListener('click', (event) => {
   const td = event.target
+  const tr = td.parentNode
   selected = td.innerHTML
   clearSelections()
-  td.classList.add('selected')
+  tr.classList.add('selected')
+  showPreview(selected)
 })
 
 chrome.storage.sync.get(["tabGroupsSaves"], (result) => {

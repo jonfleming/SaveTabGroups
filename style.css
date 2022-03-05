@@ -11,7 +11,7 @@ button {
 
 #table {
   border: 1px solid black;
-  width: 300px;
+  width: 250px;
   cursor: pointer;
 }
 
@@ -21,4 +21,30 @@ button {
 
 .close {
   color: red;
+}
+
+#preview {
+  border: 1px solid black;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  padding-right: 1rem;
 }
