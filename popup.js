@@ -35,7 +35,7 @@ function deleteRow(event) {
 }
 
 function clearSelections() {
-  const cells = document.querySelectorAll('td')
+  const cells = document.querySelectorAll('tr')
   cells.forEach(cell => { cell.classList.remove('selected')})
 }
 
