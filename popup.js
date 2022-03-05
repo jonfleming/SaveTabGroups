@@ -3,9 +3,17 @@ const loadButton = document.getElementById("load-button")
 const table = document.getElementById("table")
 const message = document.getElementById("message")
 const preview = document.getElementById("preview")
+// yellow is 'orange' in Edge
+const order = ['blue', 'red', 'yellow', 'green', 'pink', 'purple', 'teal', 'gray']
 
 let tabGroupsSaves = {}
 let selected = ''
+
+function sortOrder(a, b) {
+  const ia = order.indexOf(a.color)
+  const ib = order.indexOf(b.color)
+  return ia - ib
+}
 
 function addRow(name) {
   const tr = table.insertRow(-1)
@@ -79,7 +87,8 @@ saveButton.addEventListener('click', async () => {
   }
   
   message.innerText = ''
-  const tabGroups = await chrome.tabGroups.query({  })
+  const tabGroups = await chrome.tabGroups.query({})
+  tabGroups.sort(sortOrder)
   const tabs = await chrome.tabs.query({ })
   for (let i = 0; i < tabGroups.length; i++) {
     const group = tabGroups[i]
@@ -110,6 +119,7 @@ loadButton.addEventListener('click', async () => {
   }
 
   const tabGroups = tabGroupsSaves[selected]
+  tabGroups.sort(sortOrder)
 
   for (let i = 0; i < tabGroups.length; i++) {
     const tabGroup = tabGroups[i]
