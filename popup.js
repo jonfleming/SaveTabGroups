@@ -41,7 +41,7 @@ table.addEventListener('click', (event) => {
 
 chrome.storage.sync.get(["tabGroupsSaves"], (result) => {
   if (result) {
-    console.log(result)
+    console.log('storage:', result)
     tabGroupsSaves = result.tabGroupsSaves
     Object.keys(tabGroupsSaves).forEach(save => {
       addRow(save)
@@ -55,34 +55,38 @@ saveButton.addEventListener('click', async () => {
 
   if (!name) {
     message.innerText = 'Please enter a Name'
+    message.style.color = 'red'
     return
   }
   
   message.innerText = ''
-  chrome.tabGroups.query({ windowId: window.WINDOW_ID_CURRENT }, (tabGroups) => {
-    tabGroups.forEach(group => {
-      chrome.tabs.query({groupId: group.id}, (tabs) => {
-        const tabList = []
-        tabs.forEach(tab => {
-          tabList.push({favIconUrl: tab.favIconUrl, title: tab.title, url: tab.url})
-        })
-        group.tabs = tabList
-        groupList.push(group)
-      })  
-    })
+  const tabGroups = await chrome.tabGroups.query({  })
+  const tabs = await chrome.tabs.query({ })
+  for (let i = 0; i < tabGroups.length; i++) {
+    const group = tabGroups[i]
+    const tabList = []
+    for (let j = 0; j < tabs.length; j++) {          
+      const tab = tabs[j]
+      if (tab.groupId === group.id) {
+        tabList.push({ favIconUrl: tab.favIconUrl, title: tab.title, url: tab.url })
+      }
+    }
+    group.tabs = tabList
+    groupList.push(group)
+  }
     
-    
-    tabGroupsSaves[name] = groupList
-    chrome.storage.sync.set({ tabGroupsSaves }, () => {
-      addRow(name)
-      message.innerText = `Tab Groups [${name}] Saved.`  
-    });
-  })
+  tabGroupsSaves[name] = groupList
+  chrome.storage.sync.set({ tabGroupsSaves }, () => {
+    addRow(name)
+    message.innerText = `Tab Groups [${name}] Saved.`
+    message.style.color = 'green'
+  });
 });
   
 loadButton.addEventListener('click', async () => {
   if (!selected || selected === 'X') {
     message.innerText = 'Please select saved Tab Groups'
+    message.style.color = 'red'
     return
   }
 
@@ -107,7 +111,8 @@ loadButton.addEventListener('click', async () => {
     const groupId = await chrome.tabs.group({tabIds})
     chrome.tabGroups.update(groupId, { title: tabGroup.title, color: tabGroup.color })
     
-    message.innerText = 'Loaded Tab Groups [${selected}]'
+    message.innerText = `Loaded Tab Groups ${selected}]`
+    message.style.color = 'green'
   }
 })
 
