@@ -1,5 +1,6 @@
 body {
   min-width: 500px;
+  background: #f1f1f1;
 }
 button {
   margin: 10px;
@@ -10,7 +11,7 @@ button {
 }
 
 #table {
-  border: 1px solid black;
+  /* border: 1px solid #fefefe; */
   width: 250px;
   cursor: pointer;
 }
@@ -24,7 +25,11 @@ button {
 }
 
 #preview {
-  border: 1px solid black;
+  border: 1px solid #606060;
+}
+
+.saved-cell {
+  padding-bottom: 5px;
 }
 
 .container {
@@ -47,4 +52,8 @@ ul {
 
 li {
   padding-right: 1rem;
+}
+
+.hide {
+  display: none;
 }
