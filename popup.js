@@ -1,9 +1,11 @@
-const saveButton = document.getElementById("save-button")
-const loadButton = document.getElementById("load-button")
-const table = document.getElementById("table")
-const message = document.getElementById("message")
-const preview = document.getElementById("preview")
-const previewHeading = document.getElementById("preview-heading")
+const saveButton = document.getElementById('save-button')
+const saveLink = document.getElementById('saveLink')
+const input = document.getElementById('input')
+const loadButton = document.getElementById('load-button')
+const table = document.getElementById('table')
+const message = document.getElementById('message')
+const preview = document.getElementById('preview')
+const previewHeading = document.getElementById('preview-heading')
 // yellow is 'orange' in Edge
 const order = ['blue', 'red', 'yellow', 'green', 'pink', 'purple', 'teal', 'gray']
 
@@ -23,16 +25,11 @@ function addRow(name) {
   const text = document.createTextNode(name)
   td.classList.add('saved-cell')
   td.appendChild(text)
-  icon.appendChild(document.createTextNode('Delete'))
-  icon.classList.add('close')
-  icon.style.width = '1rem'
-  icon.addEventListener('click', deleteRow)
 }
 
-function deleteRow(event) {
-  const node = event.target
-  const tr = node.parentNode
-  const name = node.previousSibling.innerHTML
+function deleteRow() {
+  const tr = currentCell.parentNode
+  const name = currentCell.innerHTML
 
   if (confirm(`Delete saved groups [${name}]`)) {
     table.deleteRow(tr.rowIndex)
@@ -40,13 +37,17 @@ function deleteRow(event) {
     chrome.storage.local.set({ tabGroupSaves })
     selected = '' 
     message.innerText = `Deleted saved groups [${name}]`
-    message.style.color = 'gray'
+		message.style.color = 'gray'
+		clearSelection()
   }
 }
 
-function clearSelections() {
-  const cells = document.querySelectorAll('td')
-  cells.forEach(cell => { cell.classList.remove('selected')})
+function clearSelection() {
+	currentCell.classList.remove('selected')
+	currentCell = undefined
+	document.removeEventListener('onkeydown', checkKey)
+	previewHeading.classList.add('hide')
+	loadButton.classList.add('hide')
 }
 
 function showPreview(name) {  
@@ -61,15 +62,15 @@ function showPreview(name) {
 }
 
 table.addEventListener('click', (event) => {
-  const td = event.target
-  const tr = td.parentNode
-  selected = td.innerHTML
-  clearSelections()
-  td.classList.add('selected')
-  showPreview(selected)
+	const td = event.target
+	selectCell(td)
 })
 
-chrome.storage.local.get(["tabGroupSaves"], (result) => {
+saveLink.addEventListener('click', (event) => {
+	input.classList.remove('hide')
+})
+
+chrome.storage.local.get(['tabGroupSaves'], (result) => {
   if (result) {
     console.log('storage:', result)
     
@@ -85,7 +86,7 @@ chrome.storage.local.get(["tabGroupSaves"], (result) => {
 
 saveButton.addEventListener('click', async () => {
   const groupList = []
-  const name = document.getElementById("name").value
+  const name = document.getElementById('name').value
 
   if (!name) {
     message.innerText = 'Please enter a Name'
@@ -113,9 +114,11 @@ saveButton.addEventListener('click', async () => {
   tabGroupSaves[name] = groupList
   chrome.storage.local.set({ tabGroupSaves }, () => {
     addRow(name)
-    message.innerText = `Tab Groups [${name}] Saved.`
+    message.innerHTML = `<br\><br\>Tab Groups [${name}] Saved.`
     message.style.color = 'green'
-  });
+	});
+	
+	input.classList.add('hide')
 });
   
 loadButton.addEventListener('click', async () => {
@@ -152,3 +155,50 @@ loadButton.addEventListener('click', async () => {
   }
 })
 
+// Table Navigation
+function selectCell(td) {
+	if (td != null) {
+		td.focus()
+		currentCell?.classList.remove('selected')
+		selected = td.innerHTML
+		currentCell = td;
+		td.classList.add('selected')
+		loadButton.classList.remove('hide')
+		showPreview(selected)
+		document.onkeydown = checkKey
+  }
+}
+
+function checkKey(e) {
+  e = e || window.event;
+	if (e.keyCode == '38') {
+		// up arrow
+		var idx = currentCell.cellIndex;
+		var nextrow = currentCell.parentElement.previousElementSibling;
+		if (nextrow != null) {
+			var sibling = nextrow.cells[idx];
+			selectCell(sibling);
+		}
+	} else if (e.keyCode == '40') {
+		// down arrow
+		var idx = currentCell.cellIndex;
+		var nextrow = currentCell.parentElement.nextElementSibling;
+		if (nextrow != null) {
+			var sibling = nextrow.cells[idx];
+			selectCell(sibling);
+		}
+	} else if (e.keyCode == '37') {
+		// left arrow
+		var sibling = currentCell.previousElementSibling;
+		selectCell(sibling);
+	} else if (e.keyCode == '39') {
+		// right arrow
+		var sibling = currentCell.nextElementSibling;
+		selectCell(sibling);
+	} else if (e.keyCode == '46') {
+		// delete
+		deleteRow(currentCell)
+	}
+}
+
+var currentCell = table.rows[0]?.cells[0]

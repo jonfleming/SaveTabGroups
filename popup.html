@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css">
+		<title>Save Tab Groups</title>
   </head>
   <body>
     <h1>Tab Groups</h1>
@@ -10,17 +13,21 @@
           <h2>Saved Groups</h2>
           <table id='table'></table>  
         </div>
-        <div class="item">
-          <h2 class="hide" id="preview-heading">Preview</h1>
+        <div class="item hide" id="preview-heading">
+          <h2>Contains</h1>
           <div id="preview"></div>
+          <br/>
+          <button class="hide" id="load-button">Load Selected Tab Groups</button>
         </div>
-      </div>
-    <button id="load-button">Load Tab Groups</button>
+      </div>   
 
     <hr/>
-    <label for="save-name">Name</label>
-    <input type="text" id="name" placeholder="Name for the saved groups">
-    <button id="save-button">Save Tab Groups</button><br/>
+    <a id="saveLink" class="saveLink">Save current tab groups</a>
+		<div id="input" class="hide">
+			<label for="save-name">New: </label>
+			<input type="text" id="name" placeholder="Name for the saved groups">
+			<button id="save-button">Save</button><br/>
+		</div>
     <span id="message"></span>
     <script src="popup.js"></script>
   </body>

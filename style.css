@@ -1,6 +1,7 @@
 body {
   min-width: 500px;
   background: #f1f1f1;
+	font-family: Arial, Helvetica, sans-serif;
 }
 button {
   margin: 10px;
@@ -17,7 +18,8 @@ button {
 }
 
 .selected {
-  background-color: tan;
+  /* background-color: tan; */
+	border: 2px solid blue;
 }
 
 .close {
@@ -56,4 +58,10 @@ li {
 
 .hide {
   display: none;
+}
+
+.saveLink {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
 }
