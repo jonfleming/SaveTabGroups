@@ -6,8 +6,8 @@ const table = document.getElementById('table')
 const message = document.getElementById('message')
 const preview = document.getElementById('preview')
 const previewHeading = document.getElementById('preview-heading')
-const groupName = document.getElementById('groupName').value
-// yellow is 'orange' in Edge
+const groupName = document.getElementById('groupName')
+// yellow is 'orange' in Edge. teal is cyan, gray is grey
 const order = ['blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan', 'grey']
 
 let tabGroupSaves = {}
@@ -69,6 +69,7 @@ table.addEventListener('click', (event) => {
 
 saveLink.addEventListener('click', (event) => {
 	input.classList.remove('hide')
+	groupName.focus()
 })
 
 chrome.storage.local.get(['tabGroupSaves'], (result) => {
@@ -87,9 +88,10 @@ chrome.storage.local.get(['tabGroupSaves'], (result) => {
 
 saveButton.addEventListener('click', async () => {
   const groupList = []
-  
-  if (!groupName) {
-    message.innerText = 'Please enter a groupName'
+	const name = groupName.value
+	
+  if (!name) {
+    message.innerText = 'Please enter a name'
     message.style.color = 'red'
     return
   }
@@ -111,10 +113,10 @@ saveButton.addEventListener('click', async () => {
     groupList.push(group)
   }
     
-  tabGroupSaves[groupName] = groupList
+  tabGroupSaves[name] = groupList
   chrome.storage.local.set({ tabGroupSaves }, () => {
-    addRow(groupName)
-    message.innerHTML = `<br\><br\>Tab Groups [${groupName}] Saved.`
+    addRow(name)
+    message.innerHTML = `<br\><br\>Tab Groups [${name}] Saved.`
     message.style.color = 'green'
 	});
 	
