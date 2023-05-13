@@ -150,7 +150,7 @@ loadButton.addEventListener('click', async () => {
     }
 
     const groupId = await chrome.tabs.group({tabIds})
-    chrome.tabGroups.update(groupId, { title: tabGroup.title, color: tabGroup.color })
+    chrome.tabGroups.update(groupId, { title: tabGroup.title, color: tabGroup.color, collapsed: tabGroup.collapsed })
     
     message.innerText = `Loaded Tab Groups ${selected}]`
     message.style.color = 'green'
