@@ -35,7 +35,7 @@ function deleteRow() {
   if (confirm(`Delete saved groups [${name}]`)) {
     table.deleteRow(tr.rowIndex)
     delete tabGroupSaves[name]
-    chrome.storage.local.set({ tabGroupSaves })
+    chrome.storage.sync.set({ tabGroupSaves })
     selected = '' 
     message.innerText = `Deleted saved groups [${name}]`
 		message.style.color = 'gray'
@@ -72,7 +72,7 @@ saveLink.addEventListener('click', (event) => {
 	groupName.focus()
 })
 
-chrome.storage.local.get(['tabGroupSaves'], (result) => {
+chrome.storage.sync.get(['tabGroupSaves'], (result) => {
   if (result) {
     console.log('storage:', result)
     
@@ -114,7 +114,7 @@ saveButton.addEventListener('click', async () => {
   }
     
   tabGroupSaves[name] = groupList
-  chrome.storage.local.set({ tabGroupSaves }, () => {
+  chrome.storage.sync.set({ tabGroupSaves }, () => {
     addRow(name)
     message.innerHTML = `<br\><br\>Tab Groups [${name}] Saved.`
     message.style.color = 'green'
