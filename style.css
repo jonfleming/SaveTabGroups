@@ -1,25 +1,53 @@
 body {
   min-width: 500px;
-  background: #f1f1f1;
+  background: white;
 	font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #eeeeee;
+  margin: 0;
 }
+
+.title {
+  font-size: 18px;
+  font-weight: 900;
+  background: #efefef;
+  padding: 5px;
+}
+
 button {
   margin: 10px;
+  background: #3f6ad6;
+  color: white;
+  border: 0px;
+  border-radius: 6px;
 }
 
 #message {
-  color: green
+  color: green;
+  padding: 5px;
 }
 
-#table {
-  /* border: 1px solid #fefefe; */
-  width: 250px;
-  cursor: pointer;
-}
-
-.selected {
+td.selected {
   /* background-color: tan; */
 	border: 2px solid blue;
+}
+
+.table {
+  /* border-collapse: collapse; */
+  width: 250px;
+}
+
+td {
+  cursor: pointer;
+  border: 2px solid #eeeeee;
+  padding-left: 10px;
+}
+
+th {
+  text-align: left;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  padding-left: 15px;
 }
 
 .close {
@@ -31,19 +59,19 @@ button {
 }
 
 .saved-cell {
-  padding-bottom: 5px;
+  padding-bottom: 2px;
 }
 
 .container {
   display: flex;
   flex-direction: row;
   justify-content: start;
+  min-height: 300px;
 }
 
 .item {
   display: flex;
   flex-direction: column;
-  margin-left: 1rem;
 }
 
 ul {
@@ -60,8 +88,16 @@ li {
   display: none;
 }
 
-.saveLink {
-	color: blue;
-	text-decoration: underline;
+.button {
 	cursor: pointer;
+  padding: 5px;
+}
+
+.save-name {
+  padding: 5px;
+}
+
+.rotate {
+  display: inline-block;
+  transform: rotate(-45deg);
 }

@@ -7,28 +7,33 @@
 		<title>Save Tab Groups</title>
   </head>
   <body>
-    <h1>Tab Groups</h1>
-      <div class="container">
-        <div class="item">
-          <h2>Saved Groups</h2>
-          <table id='table'></table>  
-        </div>
-        <div class="item hide" id="preview-heading">
-          <h2>Contains</h1>
-          <div id="preview"></div>
-          <br/>
-          <button class="hide" id="load-button">Load Selected Tab Groups</button>
-        </div>
-      </div>   
+    <div id="title" class="title">Tab Groups</div>
+    <div class="container">
+      <div class="item">
+        <table id="saved-groups-table" class="table"><caption></caption>
+            <tr><th></th></tr>
+        </table>
+        <div id="no-saves">-- No saved groups --</div>
+
+      </div>
+      <div class="item hide" id="preview-heading">
+        <table id="items-table" class="table"><caption></caption>
+          <tr><th>Contains</th></tr>
+        </table>  
+        <div id="preview"></div>
+        <br/>
+        <button class="button" id="load-button">Load Selected Tab Groups</button>
+      </div>
+    </div>   
 
     <hr/>
-    <a id="saveLink" class="saveLink">Save current tab groups</a>
+    <button type="button" id="save-link" class="button save-link">Save current tab groups</button>
 		<div id="input" class="hide">
-			<label for="save-name">New: </label>
-			<input type="text" id="groupName" placeholder="Name for the saved groups">
-			<button id="save-button">Save</button><br/>
+			<label for="save-name" class="save-name">New: </label>
+			<input type="text" id="group-name" placeholder="Name for the saved groups" />
+			<button type="button" id="save-button" class="button"> Save </button><br />
 		</div>
-    <span id="message"></span>
+    <span id="message" class="message"></span>
     <script src="popup.js"></script>
   </body>
 </html>
